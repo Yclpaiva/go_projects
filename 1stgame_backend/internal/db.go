@@ -233,3 +233,49 @@ func DbQueryResources() map[string]float64 {
 	Dbclose(db)
 	return toReturn
 }
+
+func DbQueryIndustriesConsumption() []industriesConsumption {
+	db := Dbstart()
+	result, err := db.Query("SELECT * FROM industries_consumption")
+	if err != nil {
+		println("erro ao fazer a query")
+		log.Fatal(err)
+	}
+	var toReturn []industriesConsumption
+	for result.Next() {
+		var id int
+		var resourceName string
+		var industryName string
+		var quantity float64
+		err := result.Scan(&resourceName, &industryName, &quantity)
+		if err != nil {
+			println("erro ao fazer o parsing dos dados")
+		}
+		toReturn = append(toReturn, industriesConsumption{id, resourceName, industryName, quantity})
+	}
+	Dbclose(db)
+	return toReturn
+}
+
+func DbQueryIndustriesProduction() []industriesProduction {
+	db := Dbstart()
+	result, err := db.Query("SELECT * FROM industries_production")
+	if err != nil {
+		println("erro ao fazer a query")
+		log.Fatal(err)
+	}
+	var toReturn []industriesProduction
+	for result.Next() {
+		var id int
+		var resourceName string
+		var industryName string
+		var quantity float64
+		err := result.Scan(&resourceName, &industryName, &quantity)
+		if err != nil {
+			println("erro ao fazer o parsing dos dados")
+		}
+		toReturn = append(toReturn, industriesProduction{id, resourceName, industryName, quantity})
+	}
+	Dbclose(db)
+	return toReturn
+}

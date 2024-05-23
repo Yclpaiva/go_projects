@@ -23,6 +23,22 @@ func resourcesDataHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resourcesMap)
 }
 
+func industriesConsumptionDataHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+
+	industriesConsumption := internal.DbQueryIndustriesConsumption()
+	json.NewEncoder(w).Encode(industriesConsumption)
+}
+
+func industriesProductionDataHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+
+	industriesProduction := internal.DbQueryIndustriesProduction()
+	json.NewEncoder(w).Encode(industriesProduction)
+}
+
 func main() {
 	println("Server starting...")
 
@@ -31,6 +47,8 @@ func main() {
 	})
 
 	http.HandleFunc("/api/resources", resourcesDataHandler)
+	http.HandleFunc("/api/industries/consumption", industriesConsumptionDataHandler)
+	http.HandleFunc("/api/industries/production", industriesProductionDataHandler)
 
 	err := http.ListenAndServe("localhost:8080", nil)
 	if err != nil {
