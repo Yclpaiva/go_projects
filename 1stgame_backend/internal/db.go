@@ -7,12 +7,129 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const file string = "mydb.db"
+const file string = "mydb.db?_busy_timeout=5000"
+
+func DbInitializeIndustries(db *sql.DB) {
+	if db == nil {
+		log.Fatal("db não pode ser nulo")
+	}
+
+	createIndustriesTableSQL := "CREATE TABLE IF NOT EXISTS industries (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);"
+	_, err := db.Exec(createIndustriesTableSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao criar tabela \"industries\": %v", err)
+	} else {
+		println(`nenhum erro ao iniciar tabela "industries"`)
+	}
+
+	for _, industry := range industries {
+		_, err := db.Exec("INSERT INTO industries (name) VALUES (?)", industry.Name)
+		if err != nil {
+			if err.Error() == "UNIQUE constraint failed: industries.name" {
+			} else {
+				log.Fatalf("erro desconhecido ao inserir a industry %v: %v", industry.Name, err)
+			}
+		}
+	}
+}
+
+type industriesConsumption struct {
+	id           int
+	ResourceName string
+	IndustryName string
+	Quantity     float64
+}
+type industriesProduction struct {
+	id           int
+	ResourceName string
+	IndustryName string
+	Quantity     float64
+}
+
+func DbInitializeIndustriesConsumption(db *sql.DB) {
+	if db == nil {
+		log.Fatal("db não pode ser nulo")
+	}
+
+	createIndustriesConsumptionTableSQL := `CREATE TABLE IF NOT EXISTS industries_consumption (resource_name TEXT, industry_name TEXT, quantity REAL, FOREIGN KEY (industry_name) REFERENCES industries(name));`
+
+	_, err := db.Exec(createIndustriesConsumptionTableSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao criar tabela \"industries_consumption\": %v", err)
+	} else {
+		println(`nenhum erro ao iniciar tabela "industries_consumption"`)
+	}
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao fazer a query na tabela \"industries_consumption\": %v", err)
+	}
+
+	deleteAllIndustriesConsumptionSQL := "DELETE FROM industries_consumption"
+	_, err = db.Exec(deleteAllIndustriesConsumptionSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao deletar os dados da tabela \"industries_consumption\": %v", err)
+	} else {
+		insertIndustriesConsumptionSQL := "INSERT INTO industries_consumption (resource_name, industry_name, quantity) VALUES (?, ?, ?);"
+		for _, industry := range industries {
+			for resourceName, quantity := range industry.Consumption {
+				_, err := db.Exec(insertIndustriesConsumptionSQL, resourceName, industry.Name, quantity)
+				if err != nil {
+					log.Fatalf("erro desconhecido encontrado ao inserir os dados na tabela \"industries_consumption\": %v", err)
+				}
+			}
+		}
+	}
+}
+
+func DbInitializeIndustriesProduction(db *sql.DB) {
+	if db == nil {
+		log.Fatal("db não pode ser nulo")
+	}
+
+	createIndustriesProductionTableSQL := `CREATE TABLE IF NOT EXISTS industries_production (resource_name TEXT, industry_name TEXT, quantity REAL, FOREIGN KEY (industry_name) REFERENCES industries(name));`
+
+	_, err := db.Exec(createIndustriesProductionTableSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao criar tabela \"industries_production\": %v", err)
+	} else {
+		println(`nenhum erro ao iniciar tabela "industries_production"`)
+	}
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao fazer a query na tabela \"industries_production\": %v", err)
+	}
+
+	deleteAllIndustriesProductionSQL := "DELETE FROM industries_production"
+	_, err = db.Exec(deleteAllIndustriesProductionSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao deletar os dados da tabela \"industries_production\": %v", err)
+	} else {
+		insertIndustriesProductionSQL := "INSERT INTO industries_production (resource_name, industry_name, quantity) VALUES (?, ?, ?);"
+		for _, industry := range industries {
+			for resourceName, quantity := range industry.Production {
+				_, err := db.Exec(insertIndustriesProductionSQL, resourceName, industry.Name, quantity)
+				if err != nil {
+					log.Fatalf("erro desconhecido encontrado ao inserir os dados na tabela \"industries_production\": %v", err)
+				}
+			}
+		}
+	}
+}
+
+func findIndexByName(industries []Industry, name string) int {
+	for i, industry := range industries {
+		if industry.Name == name {
+			return i
+		}
+	}
+	return -1
+}
 
 func Dbstart() *sql.DB {
 	db, err := sql.Open("sqlite3", file)
 	if err != nil {
 		println("erro ao abrir o banco de dados")
+	}
+	if err := db.Ping(); err != nil {
+		log.Fatal("erro ao conectar-se ao banco de dados:", err)
 	}
 
 	createResourceTableSQL := "CREATE TABLE IF NOT EXISTS resources (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, price REAL);"
@@ -92,6 +209,11 @@ func DbQuerytest() []string {
 
 func DbQueryResources() map[string]float64 {
 	db := Dbstart()
+
+	DbInitializeIndustries(db)
+	DbInitializeIndustriesConsumption(db)
+	DbInitializeIndustriesProduction(db)
+
 	result, err := db.Query("SELECT * FROM resources")
 	if err != nil {
 		println("erro ao fazer a query")
