@@ -80,6 +80,34 @@ func DbInitializeIndustriesConsumption(db *sql.DB) {
 	}
 }
 
+func DbInitializeEconomyMinisteryIndustries(db *sql.DB) {
+	if db == nil {
+		log.Fatal("db não pode ser nulo")
+	}
+	createEconomyMinisteryIndustriesTableSQL := `CREATE TABLE IF NOT EXISTS economy_ministery_industries (industry_name TEXT, price INT, cardTitle TEXT, cardImage TEXT, FOREIGN KEY (industry_name) REFERENCES industries(name));`
+
+	_, err := db.Exec(createEconomyMinisteryIndustriesTableSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao criar tabela \"economy_ministery_industries\": %v", err)
+	} else {
+		println(`nenhum erro ao iniciar tabela "economy_ministery_industries"`)
+	}
+
+	deleteAllEconomyMinisteryIndustriesSQL := "DELETE FROM economy_ministery_industries"
+	_, err = db.Exec(deleteAllEconomyMinisteryIndustriesSQL)
+	if err != nil {
+		log.Fatalf("erro desconhecido encontrado ao deletar os dados da tabela \"economy_ministery_industries\": %v", err)
+	} else {
+		insertEconomyMinisteryIndustriesSQL := "INSERT INTO economy_ministery_industries (industry_name, price, cardTitle, cardImage) VALUES (?, ?, ?, ?);"
+		for _, industry := range industries {
+			_, err := db.Exec(insertEconomyMinisteryIndustriesSQL, industry.Name, industry.Price, industry.CardTitle, industry.CardImage)
+			if err != nil {
+				log.Fatalf("erro desconhecido encontrado ao inserir os dados na tabela \"economy_ministery_industries\": %v", err)
+			}
+		}
+	}
+}
+
 func DbInitializeIndustriesProduction(db *sql.DB) {
 	if db == nil {
 		log.Fatal("db não pode ser nulo")
@@ -213,6 +241,7 @@ func DbQueryResources() map[string]float64 {
 	DbInitializeIndustries(db)
 	DbInitializeIndustriesConsumption(db)
 	DbInitializeIndustriesProduction(db)
+	DbInitializeEconomyMinisteryIndustries(db)
 
 	result, err := db.Query("SELECT * FROM resources")
 	if err != nil {

@@ -4,26 +4,55 @@ type Industry struct {
 	Name        string
 	Production  map[string]float64
 	Consumption map[string]float64
+	Price       int
+	CardTitle   string
+	CardImage   string
 }
 
+/*
+	{ 'id': 'woodIndustry', 'price': 5_000, 'cardTitle': 'Wood Industry', 'cardImage': `${industriesImageSource}woodIndustry.jpg` },
+
+{ 'id': 'ironMine', 'price': 10_000, 'cardTitle': 'Iron Mine', 'cardImage': `${industriesImageSource}ironMine.jpg` },
+{ 'id': 'farmlands', 'price': 3_000, 'cardTitle': 'Farmlands', 'cardImage': `${industriesImageSource}farmlands.jpg` },
+{ 'id': 'foodFactory', 'price': 50_000, 'cardTitle': 'Food Factory', 'cardImage': `${industriesImageSource}foodFactory.jpg` },
+{ 'id': 'livestockFarm', 'price': 20_000, 'cardTitle': 'Livestock Farm', 'cardImage': `${industriesImageSource}livestockFarm.jpg` },
+{ 'id': 'fishingPort', 'price': 35_000, 'cardTitle': 'Fishing Port', 'cardImage': `${industriesImageSource}fishingPort.jpg` },
+{ 'id': 'mechanicalPartsIndustry', 'price': 100_000, 'cardTitle': 'Mechanical Parts Industry', 'cardImage': `${industriesImageSource}mechanicalPartsIndustry.jpg` },
+{ 'id': 'coalMine', 'price': 10_000, 'cardTitle': 'Coal Mine', 'cardImage': `${industriesImageSource}coalMine.jpeg` },
+{ 'id': 'coalPowerplant', 'price': 100_000, 'cardTitle': 'Coal Powerplay', 'cardImage': `${industriesImageSource}coalPowerplant.jpg` },
+{ 'id': 'copperMine', 'price': 30_000, 'cardTitle': 'Copper Mine', 'cardImage': `${industriesImageSource}copperMine.jpg` },
+{ 'id': 'cottonFarm', 'price': 5_000, 'cardTitle': 'Cotton Farm', 'cardImage': `${industriesImageSource}cottonFarm.jpg` },
+{ 'id': 'paperFactory', 'price': 100_000, 'cardTitle': 'Paper Factory', 'cardImage': `${industriesImageSource}paperFactory.jpg` },
+{ 'id': 'goldMine', 'price': 1_000_000, 'cardTitle': 'Gold Mine', 'cardImage': `${industriesImageSource}goldMine.jpg` },
+{ 'id': 'university', 'price': 500_000, 'cardTitle': 'University', 'cardImage': `${industriesImageSource}university.jpg` },
+*/
 var industries = []Industry{
 	{
 		Name: "woodIndustry",
 		Production: map[string]float64{
 			"wood": 1,
 		},
+		Price:     5_000,
+		CardTitle: "Wood Industry",
+		CardImage: `woodIndustry.jpg`,
 	},
 	{
 		Name: "farmlands",
 		Production: map[string]float64{
 			"grain": 1,
 		},
+		Price:     3_000,
+		CardTitle: "Farmlands",
+		CardImage: `farmlands.jpg`,
 	},
 	{
 		Name: "ironMine",
 		Production: map[string]float64{
 			"iron": 1,
 		},
+		Price:     10_000,
+		CardTitle: "Iron Mine",
+		CardImage: `ironMine.jpg`,
 	},
 	{
 		Name: "foodFactory",
@@ -33,6 +62,9 @@ var industries = []Industry{
 		Consumption: map[string]float64{
 			"grain": 5,
 		},
+		Price:     50_000,
+		CardTitle: "Food Factory",
+		CardImage: `foodFactory.jpg`,
 	},
 	{
 		Name: "livestockFarm",
@@ -43,12 +75,18 @@ var industries = []Industry{
 			"grain": 4,
 			"wood":  1,
 		},
+		Price:     20_000,
+		CardTitle: "Livestock Farm",
+		CardImage: `livestockFarm.jpg`,
 	},
 	{
 		Name: "fishingPort",
 		Production: map[string]float64{
 			"protein": 1,
 		},
+		Price:     35_000,
+		CardTitle: "Fishing Port",
+		CardImage: `fishingPort.jpg`,
 	},
 	{
 		Name: "mechanicalPartsIndustry",
@@ -58,12 +96,18 @@ var industries = []Industry{
 		Consumption: map[string]float64{
 			"iron": 5,
 		},
+		Price:     100_000,
+		CardTitle: "Mechanical Parts Industry",
+		CardImage: `mechanicalPartsIndustry.jpg`,
 	},
 	{
 		Name: "coalMine",
 		Production: map[string]float64{
 			"coal": 1,
 		},
+		Price:     10_000,
+		CardTitle: "Coal Mine",
+		CardImage: `coalMine.jpeg`,
 	},
 	{
 		Name: "coalPowerplant",
@@ -73,24 +117,36 @@ var industries = []Industry{
 		Consumption: map[string]float64{
 			"coal": 20,
 		},
+		Price:     100_000,
+		CardTitle: "Coal Powerplay",
+		CardImage: `coalPowerplant.jpg`,
 	},
 	{
 		Name: "goldMine",
 		Production: map[string]float64{
 			"gold": 0.1,
 		},
+		Price:     1_000_000,
+		CardTitle: "Gold Mine",
+		CardImage: `goldMine.jpg`,
 	},
 	{
 		Name: "copperMine",
 		Production: map[string]float64{
 			"copper": 1,
 		},
+		Price:     30_000,
+		CardTitle: "Copper Mine",
+		CardImage: `copperMine.jpg`,
 	},
 	{
 		Name: "cottonFarm",
 		Production: map[string]float64{
 			"cotton": 1,
 		},
+		Price:     5_000,
+		CardTitle: "Cotton Farm",
+		CardImage: `cottonFarm.jpg`,
 	},
 	{
 		Name: "paperFactory",
@@ -101,6 +157,9 @@ var industries = []Industry{
 			"cotton": 5,
 			"wood":   5,
 		},
+		Price:     100_000,
+		CardTitle: "Paper Factory",
+		CardImage: `paperFactory.jpg`,
 	},
 	{
 		Name: "university",
@@ -110,18 +169,27 @@ var industries = []Industry{
 		Consumption: map[string]float64{
 			"paper": 5,
 		},
+		Price:     500_000,
+		CardTitle: "University",
+		CardImage: `university.jpg`,
 	},
 	{
 		Name: "siliconIndustry",
 		Production: map[string]float64{
 			"silicon": 1,
 		},
+		Price:     500_000,
+		CardTitle: "Silicon Industry",
+		CardImage: `siliconIndustry.jpg`,
 	},
 	{
 		Name: "sulfurMine",
 		Production: map[string]float64{
 			"sulfur": 1,
 		},
+		Price:     100_000,
+		CardTitle: "Sulfur Mine",
+		CardImage: `sulfurMine.jpg`,
 	},
 	{
 		Name: "chemicalIndustry",
@@ -133,6 +201,9 @@ var industries = []Industry{
 			"electricity": 2,
 			"grain":       1,
 		},
+		Price:     500_000,
+		CardTitle: "Chemical Industry",
+		CardImage: `chemicalIndustry.jpg`,
 	},
 	{
 		Name: "componentsIndustry",
@@ -143,6 +214,9 @@ var industries = []Industry{
 			"chemicals": 1,
 			"copper":    10,
 		},
+		Price:     1_000_000,
+		CardTitle: "Components Industry",
+		CardImage: `componentsIndustry.jpg`,
 	},
 	{
 		Name: "BasicCircuitFactory",
@@ -156,6 +230,9 @@ var industries = []Industry{
 			"electricity": 1,
 			"components":  1,
 		},
+		Price:     2_000_000,
+		CardTitle: "Basic Circuit Factory",
+		CardImage: `basicCircuitFactory.jpg`,
 	},
 	{
 		Name: "BasicChipsFactory",
@@ -169,5 +246,8 @@ var industries = []Industry{
 			"electricity":  1,
 			"chemicals":    1,
 		},
+		Price:     5_000_000,
+		CardTitle: "Basic Chips Factory",
+		CardImage: `basicChipsFactory.jpg`,
 	},
 }
