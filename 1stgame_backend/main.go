@@ -14,6 +14,10 @@ type ApiResponse struct {
 }
 
 func resourcesDataHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
 	// Set the response header to allow all origins
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	// Set the response header to be JSON
@@ -24,6 +28,10 @@ func resourcesDataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func industriesConsumptionDataHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
@@ -32,11 +40,27 @@ func industriesConsumptionDataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func industriesProductionDataHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
 	industriesProduction := internal.DbQueryIndustriesProduction()
 	json.NewEncoder(w).Encode(industriesProduction)
+}
+
+func economyIndustriesDataHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+
+	economyIndustries := internal.DbQueryEconomyMinisteryIndustries()
+	json.NewEncoder(w).Encode(economyIndustries)
 }
 
 func main() {
@@ -49,6 +73,7 @@ func main() {
 	http.HandleFunc("/api/resources", resourcesDataHandler)
 	http.HandleFunc("/api/industries/consumption", industriesConsumptionDataHandler)
 	http.HandleFunc("/api/industries/production", industriesProductionDataHandler)
+	http.HandleFunc("/api/economy/industries", economyIndustriesDataHandler)
 
 	err := http.ListenAndServe("localhost:8080", nil)
 	if err != nil {

@@ -308,3 +308,36 @@ func DbQueryIndustriesProduction() []industriesProduction {
 	Dbclose(db)
 	return toReturn
 }
+
+type EconomyMinisteryIndustry struct {
+	Id        string
+	Price     int
+	CardTitle string
+	CardImage string
+}
+
+func DbQueryEconomyMinisteryIndustries() []EconomyMinisteryIndustry {
+	db := Dbstart()
+	result, err := db.Query("SELECT * FROM economy_ministery_industries")
+	if err != nil {
+		println("erro ao fazer a query")
+		log.Fatal(err)
+	}
+	if result == nil {
+		println("result é nulo")
+	}
+	var toReturn []EconomyMinisteryIndustry
+	for result.Next() {
+		var id string
+		var price int
+		var cardTitle string
+		var cardImage string
+		err := result.Scan(&id, &price, &cardTitle, &cardImage)
+		if err != nil {
+			println("erro ao fazer o parsing dos dados")
+		}
+		toReturn = append(toReturn, EconomyMinisteryIndustry{id, price, cardTitle, cardImage})
+	}
+	Dbclose(db)
+	return toReturn
+}
